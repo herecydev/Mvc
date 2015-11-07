@@ -81,13 +81,14 @@ namespace Microsoft.AspNet.Mvc.ViewComponents
             var viewEngine = ViewEngine ?? ResolveViewEngine(context);
             var isNullOrEmptyViewName = string.IsNullOrEmpty(ViewName);
 
-            ViewEngineResult result;
-            if (!isNullOrEmptyViewName && CompositeViewEngine.IsPagePath(ViewName))
+            ViewEngineResult result = null;
+            if (!isNullOrEmptyViewName)
             {
-                // View name that was passed in is already a path, the view engine will handle this.
+                // If view name was passed in is already a path, the view engine will handle this.
                 result = viewEngine.GetView(viewContext.ExecutingFilePath, ViewName, isPartial: true);
             }
-            else
+
+            if (result == null || !result.Success)
             {
                 // This will produce a string like:
                 //

@@ -22,7 +22,7 @@ namespace Microsoft.AspNet.Mvc.ViewEngines
         /// Gets the view with the given <paramref name="viewPath"/>, relative to <paramref name="executingFilePath"/>
         /// unless <paramref name="viewPath"/> is already absolute.
         /// </summary>
-        /// <param name="executingFilePath">The path to the currently-executing view, if any.</param>
+        /// <param name="executingFilePath">The absolute path to the currently-executing view, if any.</param>
         /// <param name="viewPath">The path to the view.</param>
         /// <param name="isPartial">Determines if the view being found is a partial.</param>
         /// <returns>The <see cref="ViewEngineResult"/> of locating the view.</returns>

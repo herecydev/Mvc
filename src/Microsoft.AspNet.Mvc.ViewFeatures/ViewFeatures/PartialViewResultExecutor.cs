@@ -69,12 +69,8 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
             var viewEngine = viewResult.ViewEngine ?? ViewEngine;
             var viewName = viewResult.ViewName ?? actionContext.ActionDescriptor.Name;
 
-            ViewEngineResult result;
-            if (CompositeViewEngine.IsPagePath(viewName))
-            {
-                result = viewEngine.GetView(executingFilePath: null, viewPath: viewName, isPartial: true);
-            }
-            else
+            var result = viewEngine.GetView(executingFilePath: null, viewPath: viewName, isPartial: true);
+            if (!result.Success)
             {
                 result = viewEngine.FindView(actionContext, viewName, isPartial: true);
             }

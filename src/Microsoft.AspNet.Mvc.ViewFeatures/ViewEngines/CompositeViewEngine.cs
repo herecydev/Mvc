@@ -1,9 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.OptionsModel;
 
@@ -25,21 +23,6 @@ namespace Microsoft.AspNet.Mvc.ViewEngines
 
         /// <inheritdoc />
         public IReadOnlyList<IViewEngine> ViewEngines { get; }
-
-        /// <summary>
-        /// Determine if given name should be interpreted as a page path.
-        /// </summary>
-        /// <param name="name">Name of or path to a page.</param>
-        /// <returns><c>true</c> if the given <paramref name="name"/> appears to be a path to a page.</returns>
-        public static bool IsPagePath(string name)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(name));
-
-            // A page path starts with "~" or "/" (if absolute) or ends with ".cshtml" (if relative).
-            return name[0] == '~' ||
-                name[0] == '/' ||
-                name.EndsWith(ViewExtension, StringComparison.OrdinalIgnoreCase);
-        }
 
         /// <inheritdoc />
         public ViewEngineResult FindView(ActionContext context, string viewName, bool isPartial)

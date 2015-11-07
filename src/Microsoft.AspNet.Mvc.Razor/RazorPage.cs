@@ -39,7 +39,6 @@ namespace Microsoft.AspNet.Mvc.Razor
         private AttributeInfo _attributeInfo;
         private TagHelperAttributeInfo _tagHelperAttributeInfo;
         private StringCollectionTextWriter _valueBuffer;
-        private string _layout;
 
         public RazorPage()
         {
@@ -71,21 +70,7 @@ namespace Microsoft.AspNet.Mvc.Razor
         public ViewContext ViewContext { get; set; }
 
         /// <inheritdoc />
-        public string Layout
-        {
-            get
-            {
-                return _layout;
-            }
-            set
-            {
-                _layout = value;
-                PathWhenLayoutSet = _layout == null ? null : Path;
-            }
-        }
-
-        /// <inheritdoc />
-        public string PathWhenLayoutSet { get; set; }
+        public string Layout { get; set; }
 
         /// <inheritdoc />
         public bool IsPartial { get; set; }

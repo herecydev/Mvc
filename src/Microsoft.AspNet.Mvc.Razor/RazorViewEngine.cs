@@ -172,20 +172,6 @@ namespace Microsoft.AspNet.Mvc.Razor
             return stringRouteValue;
         }
 
-        /// <summary>
-        /// Determine if given name should be interpreted as a page path.
-        /// </summary>
-        /// <param name="name">Name of or path to a page.</param>
-        /// <returns><c>true</c> if the given <paramref name="name"/> appears to be a path to a page.</returns>
-        public static bool IsPagePath(string name)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(name));
-
-            // A page path starts with "~" or "/" (if absolute) or ends with ".cshtml" (if relative).
-            return IsApplicationRelativePath(name) || IsRelativePath(name);
-        }
-
-
         /// <inheritdoc />
         public RazorPageResult FindPage(ActionContext context, string pageName, bool isPartial)
         {
@@ -210,25 +196,13 @@ namespace Microsoft.AspNet.Mvc.Razor
                 throw new ArgumentException(Resources.ArgumentCannotBeNullOrEmpty, nameof(pagePath));
             }
 
-            var applicationRelativePath = pagePath;
-            if (!IsApplicationRelativePath(applicationRelativePath))
+            if (!(IsApplicationRelativePath(pagePath) || IsRelativePath(pagePath)))
             {
-                // Given a relative path i.e. not yet application-relative (starting with "~/" or "/"), interpret
-                // path relative to currently-executing view, if any.
-                if (string.IsNullOrEmpty(executingFilePath))
-                {
-                    // Not yet executing a view. Start in app root ("~/").
-                    applicationRelativePath = "~/" + applicationRelativePath;
-                }
-                else
-                {
-                    // Get directory name but do not use Path.GetDirectoryName() to preserve path normalization.
-                    var index = executingFilePath.LastIndexOf('/');
-                    Debug.Assert(index >= 0);
-                    applicationRelativePath = executingFilePath.Substring(0, index + 1) + applicationRelativePath;
-                }
+                // Not a path this method can handle.
+                return new RazorPageResult(pagePath, Enumerable.Empty<string>());
             }
 
+            var applicationRelativePath = MakePathAbsolute(executingFilePath, pagePath);
             var page = _pageFactory.CreateInstance(applicationRelativePath);
             if (page != null)
             {
@@ -266,6 +240,42 @@ namespace Microsoft.AspNet.Mvc.Razor
 
             var pageResult = GetPage(executingFilePath, viewPath, isPartial);
             return CreateViewEngineResult(pageResult, _viewFactory, isPartial);
+        }
+
+        /// <inheritdoc />
+        public string MakePathAbsolute(string executingFilePath, string pagePath)
+        {
+            if (string.IsNullOrEmpty(pagePath))
+            {
+                // Path is not valid; no change required.
+                return pagePath;
+            }
+
+            if (IsApplicationRelativePath(pagePath))
+            {
+                // An absolute path already; no change required.
+                return pagePath;
+            }
+
+            if (!IsRelativePath(pagePath))
+            {
+                // A page name; no change required.
+                return pagePath;
+            }
+
+            // Given a relative path i.e. not yet application-relative (starting with "~/" or "/"), interpret
+            // path relative to currently-executing view, if any.
+            if (string.IsNullOrEmpty(executingFilePath))
+            {
+                // Not yet executing a view. Start in app root.
+                return "/" + pagePath;
+            }
+
+            // Get directory name (including final slash) but do not use Path.GetDirectoryName() to preserve path
+            // normalization.
+            var index = executingFilePath.LastIndexOf('/');
+            Debug.Assert(index >= 0);
+            return executingFilePath.Substring(0, index + 1) + pagePath;
         }
 
         private RazorPageResult LocatePageFromViewLocations(
@@ -368,6 +378,12 @@ namespace Microsoft.AspNet.Mvc.Razor
 
             var view = razorViewFactory.GetView(this, result.Page, isPartial);
             return ViewEngineResult.Found(result.Name, view);
+        }
+
+        private static bool IsPagePath(string name)
+        {
+            // A page path starts with "~" or "/" (if absolute) or ends with ".cshtml" (if relative).
+            return IsApplicationRelativePath(name) || IsRelativePath(name);
         }
 
         private static bool IsApplicationRelativePath(string name)

@@ -25,11 +25,24 @@ namespace Microsoft.AspNet.Mvc.Razor
         /// Gets the page with the given <paramref name="pagePath"/>, relative to <paramref name="executingFilePath"/>
         /// unless <paramref name="pagePath"/> is already absolute.
         /// </summary>
-        /// <param name="executingFilePath">The path to the currently-executing page, if any.</param>
+        /// <param name="executingFilePath">The absolute path to the currently-executing page, if any.</param>
         /// <param name="pagePath">The path to the page.</param>
         /// <param name="isPartial">Determines if the page being found is a partial.</param>
         /// <returns>The <see cref="RazorPageResult"/> of locating the page.</returns>
         /// <remarks>See also <see cref="IViewEngine.GetView"/>.</remarks>
         RazorPageResult GetPage(string executingFilePath, string pagePath, bool isPartial);
+
+        /// <summary>
+        /// Converts the given <paramref name="pagePath"/> to be absolute, relative to
+        /// <paramref name="executingFilePath"/> unless <paramref name="pagePath"/> is already absolute.
+        /// </summary>
+        /// <param name="executingFilePath">The absolute path to the currently-executing page, if any.</param>
+        /// <param name="pagePath">The path to the page.</param>
+        /// <returns>
+        /// The combination of <paramref name="executingFilePath"/> and <paramref name="pagePath"/> if
+        /// <paramref name="pagePath"/> is a relative path. The <paramref name="pagePath"/> value (unchanged)
+        /// otherwise.
+        /// </returns>
+        string MakePathAbsolute(string executingFilePath, string pagePath);
     }
 }
