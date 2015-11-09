@@ -54,12 +54,8 @@ namespace Microsoft.AspNet.Mvc.Razor
         }
 
         /// <summary>
-        /// Gets the name or the original path of the page being located.
+        /// Gets the name or the path of the page being located.
         /// </summary>
-        /// <remarks>
-        /// This property maps to the <c>pageName</c> parameter of <see cref="IRazorViewEngine.FindPage"/> or the
-        /// <c>pagePath</c> of <see cref="IRazorViewEngine.GetPage"/>.
-        /// </remarks>
         public string Name { get; }
 
         /// <summary>

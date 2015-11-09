@@ -9,22 +9,22 @@ namespace CompositeViewEngineWebSite
 {
     public class TestViewEngine : IViewEngine
     {
-        public ViewEngineResult FindPartialView(ActionContext context, string partialViewName)
+        public ViewEngineResult FindView(ActionContext context, string viewName, bool isPartial)
         {
-            if (string.Equals(partialViewName, "partial-test-view", StringComparison.Ordinal))
+            if (string.Equals(viewName, "partial-test-view", StringComparison.Ordinal) ||
+                string.Equals(viewName, "test-view", StringComparison.Ordinal))
             {
-                return ViewEngineResult.Found(partialViewName, new TestPartialView());
+                var view = isPartial ? (IView)new TestPartialView() : new TestView();
+
+                return ViewEngineResult.Found(viewName, view);
             }
-            return ViewEngineResult.NotFound(partialViewName, new[] { partialViewName });
+
+            return ViewEngineResult.NotFound(viewName, new[] { viewName });
         }
 
-        public ViewEngineResult FindView(ActionContext context, string viewName)
+        public ViewEngineResult GetView(string executingFilePath, string viewPath, bool isPartial)
         {
-            if (string.Equals(viewName, "test-view"))
-            {
-                return ViewEngineResult.Found(viewName, new TestView());
-            }
-            return ViewEngineResult.NotFound(viewName, new[] { viewName });
+            return ViewEngineResult.NotFound(viewPath, new[] { viewPath });
         }
     }
 }

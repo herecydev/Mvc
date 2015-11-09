@@ -185,6 +185,12 @@ namespace Microsoft.AspNet.Mvc.Razor
                 throw new ArgumentException(Resources.ArgumentCannotBeNullOrEmpty, nameof(pageName));
             }
 
+            if (IsApplicationRelativePath(pageName) || IsRelativePath(pageName))
+            {
+                // A path; not a name this method can handle.
+                return new RazorPageResult(pageName, Enumerable.Empty<string>());
+            }
+
             return LocatePageFromViewLocations(context, pageName, isPartial);
         }
 
@@ -207,7 +213,7 @@ namespace Microsoft.AspNet.Mvc.Razor
             if (page != null)
             {
                 page.IsPartial = isPartial;
-                return new RazorPageResult(pagePath, page);
+                return new RazorPageResult(applicationRelativePath, page);
             }
 
             return new RazorPageResult(pagePath, new[] { applicationRelativePath });

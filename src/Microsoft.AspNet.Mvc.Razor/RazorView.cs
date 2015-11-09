@@ -163,7 +163,7 @@ namespace Microsoft.AspNet.Mvc.Razor
                 {
                     context.ExecutingFilePath = viewStart.Path;
 
-                    // Copy the layout values from the previous view start (if any) to the current.
+                    // Copy the layout value from the previous view start (if any) to the current.
                     viewStart.Layout = layout;
 
                     await RenderPageCoreAsync(viewStart, context);
@@ -178,7 +178,7 @@ namespace Microsoft.AspNet.Mvc.Razor
                 context.ExecutingFilePath = oldFilePath;
             }
 
-            // Copy over interesting properties from the ViewStart page to the entry page.
+            // Copy the layout value from the view start page(s) (if any) to the entry page.
             RazorPage.Layout = layout;
         }
 

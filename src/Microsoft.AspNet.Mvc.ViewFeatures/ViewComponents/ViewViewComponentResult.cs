@@ -108,7 +108,7 @@ namespace Microsoft.AspNet.Mvc.ViewComponents
                     context.ViewComponentDescriptor.ShortName,
                     viewName);
 
-                result = viewEngine.FindView(viewContext, viewName, isPartial: true);
+                result = viewEngine.FindView(viewContext, qualifiedViewName, isPartial: true);
             }
 
             var view = result.EnsureSuccessful().View;

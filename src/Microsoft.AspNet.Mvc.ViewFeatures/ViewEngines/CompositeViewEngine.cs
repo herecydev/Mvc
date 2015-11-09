@@ -46,7 +46,7 @@ namespace Microsoft.AspNet.Mvc.ViewEngines
                 }
             }
 
-            return ViewEngineResult.NotFound(viewName, searchedLocations);
+            return ViewEngineResult.NotFound(viewName, searchedLocations ?? Enumerable.Empty<string>());
         }
 
         /// <inheritdoc />
@@ -71,7 +71,7 @@ namespace Microsoft.AspNet.Mvc.ViewEngines
                 }
             }
 
-            return ViewEngineResult.NotFound(viewPath, searchedLocations);
+            return ViewEngineResult.NotFound(viewPath, searchedLocations ?? Enumerable.Empty<string>());
         }
     }
 }
